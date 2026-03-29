@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS market_quotes (
     id BIGSERIAL PRIMARY KEY,
-    symbol_name VARCHAR(20) NOT NULL,
+    symbol_name VARCHAR(32) NOT NULL,
     time TIMESTAMPTZ NOT NULL,
     ask_price NUMERIC(18, 8) NOT NULL,
     ask_size NUMERIC(18, 8) NOT NULL,

@@ -34,9 +34,9 @@ services:
       timeout: 5s
       retries: 5
 
-  cpp_server:
-    build: ./cpp_server
-    container_name: app_cpp_server
+  tick_server:
+    build: ./cpp
+    container_name: app_tick_server
     depends_on:
       postgres:
         condition: service_healthy

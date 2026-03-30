@@ -1,32 +1,55 @@
 # Interview Project
 
-This is a greenfield project to demonstrate your technical skills. We would like you to touch on Rabbit MQ, some SQL, C++, and Python. the file "minutely-bars.csv" has 1-min bars for a couple of markets and you will (1) load it into a database and (2) create a C++ component that listens on a queue and can return ticks based on an input JSON and (3) create a Python component that connects to RabbitMQ to query for data.
+This project loads market data from CSV into PostgreSQL, listens for requests over RabbitMQ in a C++ worker, and returns ticks over the requested time-range to a Python client.
 
-# Local development stack with PostgreSQL and RabbitMQ.
+The request flow is:
 
-## Start Services
+- Python client publishes a JSON request to `market_data_requests` queue
+- C++ service validates the request, runs a prepared PostgreSQL query, and publishes a JSON response
+- Client reads the response from a temporary reply queue and prints it
+
+## Demo
+
+Build containers:
 
 ```bash
-cd interview_project
 docker compose up -d
 ```
 
-## Stop Services
+Install Python dependencies:
 
 ```bash
-docker compose down
+pip install -r python/requirements.txt
 ```
 
-To also delete the stored data (volumes):
+Load CSV into the database:
 
 ```bash
-docker compose down -v
+./python/db_loader.py
 ```
 
-## Check Status
+Client request example:
 
 ```bash
-docker compose ps
+./python/client.py --symbol MILLBURN::::CL.NY.J.2025 --start 2025-03-02T17:30:00-05:00 --end 2025-03-02T18:30:00-05:00
+```
+
+## Timestamps
+
+Request timestamps must be ISO 8601 and include a timezone, for example:
+
+```text
+2025-03-02T17:30:00-05:00
+2025-03-02T22:30:00Z
+```
+
+
+## Development
+
+Build the server:
+
+```bash
+docker compose build tick_server
 ```
 
 ## Connection Details
@@ -41,12 +64,6 @@ docker compose ps
 | User     | postgres |
 | Password | postgres |
 
-Connect via psql:
-
-```bash
-docker exec -it app_postgres psql -U postgres -d app_db
-```
-
 ### RabbitMQ
 
 | Property       | Value |
@@ -57,10 +74,7 @@ docker exec -it app_postgres psql -U postgres -d app_db
 | User           | guest |
 | Password       | guest |
 
-## Verify
+## References
 
-Check that the `market_quotes` table was created:
-
-```bash
-docker exec -it app_postgres psql -U postgres -d app_db -c '\dt'
-```
+- RabbitMQ AMQP C docs: <https://alanxz.github.io/rabbitmq-c/docs/0.5.0/>
+- PostgreSQL libpq docs: <https://www.postgresql.org/docs/current/libpq.html>

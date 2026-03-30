@@ -12,7 +12,13 @@ find_library(RABBITMQ_LIBRARY rabbitmq REQUIRED)
 add_executable(tick_server src/main.cpp)
 
 target_compile_options(tick_server PRIVATE -Wall -Wextra -Wpedantic)
-target_include_directories(tick_server PRIVATE ${RABBITMQ_INCLUDE_DIR})
+
+target_include_directories(
+    tick_server
+    PRIVATE
+        include
+        ${RABBITMQ_INCLUDE_DIR}
+)
 target_link_libraries(
     tick_server
     PRIVATE

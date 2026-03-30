@@ -5,11 +5,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     librabbitmq-dev \
     nlohmann-json3-dev \
-    && rm -rf /var/lob/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 COPY CMakeLists.txt .
+COPY include ./include
 COPY src ./src
 
 RUN cmake -S . -B build && cmake --build build

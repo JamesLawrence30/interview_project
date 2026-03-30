@@ -2,6 +2,7 @@
 #include <postgres.hpp>
 
 #include <iostream>
+#include <cstring>
 #include <optional>
 
 using namespace tick_server;

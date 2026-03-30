@@ -9,7 +9,12 @@ find_package(nlohmann_json REQUIRED)
 find_path(RABBITMQ_INCLUDE_DIR amqp.h REQUIRED)
 find_library(RABBITMQ_LIBRARY rabbitmq REQUIRED)
 
-add_executable(tick_server src/main.cpp)
+add_executable(
+    tick_server
+        src/main.cpp
+        src/postgres.cpp
+        src/rabbitmq.cpp
+)
 
 target_compile_options(tick_server PRIVATE -Wall -Wextra -Wpedantic)
 

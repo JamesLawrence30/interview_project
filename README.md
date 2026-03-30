@@ -31,16 +31,18 @@ Load CSV into the database:
 Client request example:
 
 ```bash
-./python/client.py --symbol MILLBURN::::CL.NY.J.2025 --start 2025-03-02T17:30:00-05:00 --end 2025-03-02T18:30:00-05:00
+./python/client.py \
+--symbol MILLBURN::::CL.NY.J.2025 \
+--start 2025-03-02T17:30:00-05:00 \
+--end 2025-03-02T18:30:00-05:00
 ```
 
 ## Timestamps
 
-Request timestamps must be ISO 8601 and include a timezone, for example:
+Request must contain full timestamp with timezone, for example:
 
 ```text
 2025-03-02T17:30:00-05:00
-2025-03-02T22:30:00Z
 ```
 
 

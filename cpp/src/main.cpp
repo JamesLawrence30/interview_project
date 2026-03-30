@@ -1,8 +1,8 @@
 #include <rabbitmq.hpp>
 #include <postgres.hpp>
 
-#include <iostream>
 #include <cstring>
+#include <iostream>
 #include <optional>
 
 using namespace tick_server;
@@ -38,7 +38,17 @@ void handle_message(amqp_connection_state_t connection, PGconn* postgres, const 
             if (!validation_error.has_value()) {
                 std::string start_time = mq::get_field(body, "start_time", validation_error);
                 if (!validation_error.has_value()) {
+                    if (!utilities::is_full_timestamp(start_time)) {
+                        validation_error = "start_time must be full timestamp with timezone";
+                    }
+                }
+                if (!validation_error.has_value()) {
                     std::string end_time = mq::get_field(body, "end_time", validation_error);
+                    if (!validation_error.has_value()) {
+                        if (!utilities::is_full_timestamp(end_time)) {
+                            validation_error = "end_time must be full timestamp with timezone";
+                        }
+                    }
                     if (!validation_error.has_value()) {
                         json records = pg::query(postgres, symbol, start_time, end_time);
                         response_body = json{

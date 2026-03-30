@@ -4,6 +4,7 @@
 
 #include <cstdlib>
 #include <string>
+#include <regex>
 
 namespace tick_server {
     using json = nlohmann::json;
@@ -15,6 +16,11 @@ namespace tick_server {
                 return fallback;
             }
             return value;
+        }
+
+        inline bool is_full_timestamp(const std::string& value) {
+            const std::regex k_timestamp_pattern(R"(^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$)");
+            return std::regex_match(value, k_timestamp_pattern);
         }
     };
 };
